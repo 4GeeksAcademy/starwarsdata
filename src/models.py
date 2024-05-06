@@ -9,55 +9,55 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'user'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
-    userId = Column(Integer, primary_key=True)
-    userName = Column(String(250), nullable=False)
+    id = Column(Integer, primary_key=True)
+    username = Column(String(250), nullable=False)
     password = Column(String(250), nullable=False)
+    favorites = relationship('Favorite', backref='user')
+    
+
+class Planet(Base):
+    __tablename__ = 'planet'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    climate = Column(String(250), nullable=False)
+    population = Column(String(250), nullable=False)
+    diameter = Column(String(250), nullable=False)
+    favorites = relationship('Favorite', backref='planet')
 
 
-class Character(Base):
-    __tablename__ = 'character'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    characterId = Column(Integer, primary_key=True)
-    name = Column(String(250))
-    gender = Column(String(250))
-    skin_color = Column(String(250))
-    height = Column(Integer)
-    birth_year = Column(Integer)
+class Person(Base):
+    __tablename__ = 'person'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    hair_color=Column(String(250), nullable=True)
+    gender=Column(String(250), nullable=True)
+    birth_year=Column(String(250), nullable=False)
+    favorites = relationship('Favorite', backref='person')
 
-class Planets(Base):
-    __tablename__ = 'planets'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    planetsId = Column(Integer, primary_key=True)
-    planet_name = Column(String(250))
-    population = Column(Integer)
-    diameter = Column(Integer)
-    climaty = Column(String(250))
-    gravity = Column(String(250))
-    terrain = Column(String(250))
 
-class Ships(Base):
-    __tablename__ = 'ships'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    shipsId = Column(Integer, primary_key=True)
-    ship_name = Column(String(250))
-    max_speed = Column(Integer)
-    passengers = Column(Integer)
-    model = Column(String(250))
+class Starship(Base):
+    __tablename__ = 'starship'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    model = Column(String(250), nullable=False)
+    passengers = Column(String(250), nullable=False)
+    max_atmosphering_speed = Column(String(250), nullable=False)
+    favorites = relationship('Favorite', backref='starship')
 
-class Favorites(Base):
-    __tablename__ = 'favorites'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    favId = Column(Integer, primary_key=True)
-    shipsId = Column(Integer, ForeignKey("ships.id"))
-    planetsId = Column(Integer, ForeignKey("planets.id"))
-    charId = Column(Integer, ForeignKey("character.id"))
-    userId = Column(Integer, ForeignKey("user.id"))
+
+    
+class Favorite(Base):
+    __tablename__ = 'favorite'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    favoriteStarshipId = Column(Integer, ForeignKey('starship.id'), nullable=True)
+    favoritePersonId = Column(Integer, ForeignKey('person.id'), nullable=True)
+    favoritePlanetId = Column(Integer, ForeignKey('planet.id'), nullable=True)
+    user = relationship('User', backref='favorites')
+    starship = relationship('Starship', backref='favorites')
+    person = relationship('Person', backref='favorites')
+    planet = relationship('Planet', backref='favorites')
+
     def to_dict(self):
         return {}
 
